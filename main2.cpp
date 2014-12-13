@@ -2,14 +2,28 @@
 #include <utility>
 #include <cstdlib>
 #include <vector>
+#include <ctime>
 using namespace std;
 
 //array start from 1 to n
 
-
-void generateinput(int n, vector<int> &arr)
+struct setofjob
 {
-  for (int i=1; i<=n; i++)
+	vector<int>start;
+	vector<int>finish;	
+};
+
+
+void generateinput(int n, setofjob *a)
+{
+	srand(time(NULL));
+	for (int i=1; i<=n; i++)
+	{
+		a->start[i] = rand()%1000;
+		a->finish[i] = a->start[i] + rand()%100;
+		if (a->start[i]==a->finish[i]) a->finish[i]+= a->start[i]+rand();
+	}
+  /*for (int i=1; i<=n; i++)
   {
     arr[i] = i;
   }
@@ -17,7 +31,7 @@ void generateinput(int n, vector<int> &arr)
   {
   	int j=rand()%n+1;
   	swap (arr[i], arr[j]);	
-  }
+  }*/
 }
 
 void localsearchinsertion (vector<int> &arr)
@@ -35,16 +49,20 @@ void localsearchinsertion (vector<int> &arr)
 
 int main ()
 {
-  int n;
+  setofjob set;
+  int n, m;
+  printf ("Please input the number of job(s) : ");
   scanf ("%d", &n);
-  vector<int> setofjob;
   for(int i=0; i<=n; i++){
-  	setofjob.push_back(0);
+  	set.start.push_back(0);
+  	set.finish.push_back(0);
   }
-  generateinput(n, setofjob);
+  printf ("Please input the number of machine(s) : ");
+  scanf ("%d", &m);
+  generateinput(n, &set);
   for (int i=1; i<=n;i++)
   {
-    printf ("%d ", setofjob[i]);
+    printf ("%d %d \n", set.start[i], set.finish[i]);
   }
   printf("\n");
 }
