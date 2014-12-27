@@ -26,56 +26,83 @@ int cmax (vector <int> arr)
 
 //---------------------------------------global variable-------------------------------------------------------
 int d=3;
-
+unsigned int seed;
+typedef pair<int, int> node;
+vector< vector<node> > p;
 //--------------------------------------------------------------------------------------------------------------
-void copyVector(vector<int> asal, int n, vector<int> &tujuan)
+void copyVector(vector<node> asal, int n, vector<node> &tujuan)
 {
 	for(int i=0; i<n; i++){
 		tujuan.push_back(asal[i]);
 	}
 }
 
-void cetakVector(vector<int> vectorA)
+void cetakVector(vector<node> vectorA)
 {
 	for(int i=0; i<vectorA.size(); i++){
-		cout << vectorA[i] << " ";
+		cout << vectorA[i].second << " ";
 	}
 	cout << endl;
 }
 
-vector<int> iteratedGreedy (vector<int> phi, int n)
+vector<node> LocalSearch_Insertion(vector<node> phi)
 {
-	 vector<int> phiB;
-	 int temp;
-	 copyVector(phi, n, phiB);
-	 while(1){
-	 	vector<int> phiD, phiR;
-	 	copyVector(phiB, n, phiD);
-	 	for(int i=0; i<d;i++){
-	 		temp=rand()%phiD.size();
-	 		phiR.push_back(phiD[temp]);
-	 		phiD.erase(phiD.begin()+temp);
+	srand(seed);
+}
+
+vector<node> iteratedGreedy (vector<node> phi, int n)
+{
+	srand(seed);
+	vector<node> phiB;
+	int temp;
+	copyVector(phi, n, phiB);
+	while(1){
+		vector<node> phiD, phiR;
+		copyVector(phiB, n, phiD);
+		//destruction phase
+		for(int i=0; i<d; i++){
+			temp=rand()%phiD.size();
+			phiR.push_back(phiD[temp]);
+			phiD.erase(phiD.begin()+temp);
+		 }
+		 //construction phase
+		 for(int i=0; i<d; i++){
+		 	temp=rand()%phiD.size();
+		 	phiD.insert(phiD.begin()+temp, phiR[i]);
 		 }
 		 return phiD;
-	 	if(1) break;
-	 }
+		if(1) break;
+	}
 }
 
 
 int main ()
 {
-	int n, m, temp;
-	vector<int> phi, ptime;
+	int n, m;
+	node temp;
+	vector<node> phi;
 	printf ("Please input the number of job(s) : ");
 	cin >> n;
-	printf ("Please input the number of machine(s) : ");
-	scanf ("%d", &m);
-	for (int i=0; i<(n*m);i++)
-	{
-		cin >> temp;
-		ptime.push_back(temp);
+	for(int i=0;i<n;i++){
+		temp.first=0;
+		temp.second=i+1;
+		phi.push_back(temp);
 	}
-	cetakVector(iteratedGreedy(ptime, n));
+	printf ("Please input the number of machine(s) : ");
+	cin >> m;
+	cout << "Please input initial seed :";
+	cin >> seed;
+	for (int i=0; i<m;i++)
+	{
+		cout << "Please input processing time job for machine number : " << i+1 << endl;
+		for(int j=0; j<n ; j++)
+		{
+			cin >> (phi[j]).first;
+		}
+		p.push_back(phi);
+	}
+	cout << endl << "Final Result :" << endl;
+	//cetakVector(iteratedGreedy(p[0], n));
 	printf("\n");
 	return 0;
 }
