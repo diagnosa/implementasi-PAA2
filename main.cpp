@@ -13,7 +13,7 @@ using namespace std;
 
 //---------------------------------------global variable-------------------------------------------------------
 int d=3;
-
+vector< vector<int> > p;
 //--------------------------------------------------------------------------------------------------------------
 void copyVector(vector<int> asal, int n, vector<int> &tujuan)
 {
@@ -28,6 +28,10 @@ void cetakVector(vector<int> vectorA)
 		cout << vectorA[i] << " ";
 	}
 	cout << endl;
+}
+
+vector<int> LocalSearch_Insertion(vector<int> phi)
+{
 }
 
 vector<int> iteratedGreedy (vector<int> phi, int n)
@@ -52,17 +56,24 @@ vector<int> iteratedGreedy (vector<int> phi, int n)
 int main ()
 {
 	int n, m, temp;
-	vector<int> phi, ptime;
+	vector<int> phi;
 	printf ("Please input the number of job(s) : ");
 	cin >> n;
-	for (int i=0; i<n;i++)
-	{
-		cin >> temp;
-		ptime.push_back(temp);
+	for(int i=0;i<n;i++){
+		phi.push_back(0);
 	}
 	printf ("Please input the number of machine(s) : ");
-	scanf ("%d", &m);
-	cetakVector(iteratedGreedy(ptime, n));
+	cin >>m;
+	for (int i=0; i<m;i++)
+	{
+		cout << "masukkan processing time job untuk machine ke-" << i+1 << endl;
+		for(int j=0; j<n ; j++)
+		{
+			cin >> phi[j];
+		}
+		p.push_back(phi);
+	}
+	//cetakVector(iteratedGreedy(ptime, n));
 	printf("\n");
 	return 0;
 }
