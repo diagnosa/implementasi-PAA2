@@ -11,24 +11,25 @@ using namespace std;
 //array start from 0 to n-1
 //test-case : mistic.heig-vd.ch/taillard/problemes.dir/ordonnancement.dir/flowshop.dir/tai50_20.txt
 
-//-----------------------------------------Cmax ----------------------------------------------------------------
-
-int cmax (vector <int> arr)
-{
-	//total completion time
-	int sum = 0;
-	for (int i=0; i<arr.size(); i++)
-	{
-		sum += arr[i];
-	}
-	return sum;
-}
-
 //---------------------------------------global variable-------------------------------------------------------
 int d=3;
 unsigned int seed;
 typedef pair<int, int> node;
 vector< vector<node> > p;
+
+//-----------------------------------------Cmax ----------------------------------------------------------------
+
+int cmax (vector <node> arr)
+{
+	//total completion time
+	int sum = 0;
+	for (int i=0; i<arr.size(); i++)
+	{
+		sum += arr[i].first;
+	}
+	return sum;
+}
+
 //--------------------------------------------------------------------------------------------------------------
 void copyVector(vector<node> asal, int n, vector<node> &tujuan)
 {
@@ -45,30 +46,53 @@ void cetakVector(vector<node> vectorA)
 	cout << endl;
 }
 
-vector<node> LocalSearch_Insertion(vector<node> phi)
+vector<node> LocalSearch_Insertion(vector<node> phi, int n)
 {
 	srand(seed);
+	bool improve = 1;
+	int k;
+	node temp;
+	vector <node> phiA;
+	while (improve == 1)
+	{
+		copyVector (phi, n, phiA);
+		improve = 0;
+		for (int i=0; i < n; i++)
+		{
+			k=rand()%phiA.size();
+			temp = phiA[k];
+			phiA.erase(phiA.begin()+k);
+			k = rand()%phiA.size();
+			phiA.insert(phiA.begin()+k, temp);
+			if (cmax(phiA) < cmax(phi))
+			{
+				copyVector(phiA, n, phi);
+				improve = 1;
+			}
+		}
+	}
+	return phi;
 }
 
 vector<node> iteratedGreedy (vector<node> phi, int n)
 {
 	srand(seed);
 	vector<node> phiB;
-	int temp;
+	int k;
 	copyVector(phi, n, phiB);
 	while(1){
 		vector<node> phiD, phiR;
 		copyVector(phiB, n, phiD);
 		//destruction phase
 		for(int i=0; i<d; i++){
-			temp=rand()%phiD.size();
-			phiR.push_back(phiD[temp]);
-			phiD.erase(phiD.begin()+temp);
+			k=rand()%phiD.size();
+			phiR.push_back(phiD[k]);
+			phiD.erase(phiD.begin()+k);
 		 }
 		 //construction phase
 		 for(int i=0; i<d; i++){
-		 	temp=rand()%phiD.size();
-		 	phiD.insert(phiD.begin()+temp, phiR[i]);
+		 	k=rand()%phiD.size();
+		 	phiD.insert(phiD.begin()+k, phiR[i]);
 		 }
 		 return phiD;
 		if(1) break;
