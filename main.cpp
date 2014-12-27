@@ -55,13 +55,13 @@ int main ()
 	vector<int> phi, ptime;
 	printf ("Please input the number of job(s) : ");
 	cin >> n;
-	for (int i=0; i<n;i++)
+	printf ("Please input the number of machine(s) : ");
+	scanf ("%d", &m);
+	for (int i=0; i<(n*m);i++)
 	{
 		cin >> temp;
 		ptime.push_back(temp);
 	}
-	printf ("Please input the number of machine(s) : ");
-	scanf ("%d", &m);
 	cetakVector(iteratedGreedy(ptime, n));
 	printf("\n");
 	return 0;
