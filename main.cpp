@@ -26,6 +26,7 @@ int cmax (vector <int> arr)
 
 //---------------------------------------global variable-------------------------------------------------------
 int d=3;
+unsigned int seed;
 vector< vector<int> > p;
 //--------------------------------------------------------------------------------------------------------------
 void copyVector(vector<int> asal, int n, vector<int> &tujuan)
@@ -45,24 +46,31 @@ void cetakVector(vector<int> vectorA)
 
 vector<int> LocalSearch_Insertion(vector<int> phi)
 {
+	srand(seed);
 }
 
 vector<int> iteratedGreedy (vector<int> phi, int n)
 {
-	 vector<int> phiB;
-	 int temp;
-	 copyVector(phi, n, phiB);
-	 while(1){
-	 	vector<int> phiD, phiR;
-	 	copyVector(phiB, n, phiD);
-	 	for(int i=0; i<d;i++){
-	 		temp=rand()%phiD.size();
-	 		phiR.push_back(phiD[temp]);
-	 		phiD.erase(phiD.begin()+temp);
-		 }
-		 return phiD;
-	 	if(1) break;
+	srand(seed);
+	vector<int> phiB;
+	int temp;
+	copyVector(phi, n, phiB);
+	while(1){
+	vector<int> phiD, phiR;
+	copyVector(phiB, n, phiD);
+	//destruction phase
+	for(int i=0; i<d; i++){
+		temp=rand()%phiD.size();
+		phiR.push_back(phiD[temp]);
+		phiD.erase(phiD.begin()+temp);
 	 }
+	 //construction phase
+	 for(int i=0; i<d; i++){
+	 	temp=rand()%phiD.size();
+	 }
+	 return phiD;
+	if(1) break;
+	}
 }
 
 
@@ -76,10 +84,12 @@ int main ()
 		phi.push_back(0);
 	}
 	printf ("Please input the number of machine(s) : ");
-	cin >>m;
+	cin >> m;
+	cout << "Please input initial seed :";
+	cin >> seed;
 	for (int i=0; i<m;i++)
 	{
-		cout << "masukkan processing time job untuk machine ke-" << i+1 << endl;
+		cout << "Please input processing time job for machine number : " << i+1 << endl;
 		for(int j=0; j<n ; j++)
 		{
 			cin >> phi[j];
