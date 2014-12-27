@@ -8,8 +8,21 @@
 
 using namespace std;
 
-//array start from 1 to n
+//array start from 0 to n-1
 //test-case : mistic.heig-vd.ch/taillard/problemes.dir/ordonnancement.dir/flowshop.dir/tai50_20.txt
+
+//-----------------------------------------Cmax ----------------------------------------------------------------
+
+int cmax (vector <int> arr)
+{
+	//total completion time
+	int sum = 0;
+	for (int i=0; i<arr.size(); i++)
+	{
+		sum += arr[i];
+	}
+	return sum;
+}
 
 //---------------------------------------global variable-------------------------------------------------------
 int d=3;
