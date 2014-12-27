@@ -1,68 +1,68 @@
+#include <cstdio>
+#include <utility>
+#include <cstdlib>
 #include <iostream>
+#include <ctime>
 #include <algorithm>
-#include <stdlib.h>
+#include <vector>
+
 using namespace std;
 
 //array start from 1 to n
+//test-case : mistic.heig-vd.ch/taillard/problemes.dir/ordonnancement.dir/flowshop.dir/tai50_20.txt
 
-//generating random number
-void randominput(int input[], int n)
+//---------------------------------------global variable-------------------------------------------------------
+int d=3;
+
+//--------------------------------------------------------------------------------------------------------------
+void copyVector(vector<int> asal, int n, vector<int> &tujuan)
 {
-	for (int i=1; i<=n; i++)
-	{
-		input[i] = rand() % n +1;
+	for(int i=0; i<n; i++){
+		tujuan.push_back(asal[i]);
 	}
 }
 
-//generating set of job
-//a for start time and b for finish time
-void jobset (int a[], int b[], int n)
+void cetakVector(vector<int> vectorA)
 {
-	randominput (a, n);
-	randominput (b, n);
-	for (int i = 1; i<=n; i++)
-	{
-		if (a[i]==b[i])
-		{
-			b[i]+= rand() % (n/2);
-		}
-		
-		if (a[i] > b[i])
-		{
-			swap (a[i], b[i]);
-		}
+	for(int i=0; i<vectorA.size(); i++){
+		cout << vectorA[i] << " ";
 	}
+	cout << endl;
 }
 
-//priority rule (for comparisson)
-int PRTCTlj (int j, int v1, int v2, int p1j, int p2j) 
+vector<int> iteratedGreedy (vector<int> phi, int n)
 {
-	int C1j = v1 + p1j + lj;
-	return (2 * (max(v2,C1j)) + p2j);
+	 vector<int> phiB;
+	 int temp;
+	 copyVector(phi, n, phiB);
+	 while(1){
+	 	vector<int> phiD, phiR;
+	 	copyVector(phiB, n, phiD);
+	 	for(int i=0; i<d;i++){
+	 		temp=rand()%phiD.size();
+	 		phiR.push_back(phiD[temp]);
+	 		phiD.erase(phiD.begin()+temp);
+		 }
+		 return phiD;
+	 	if(1) break;
+	 }
 }
 
-//iterated local search
-int ILS (int n)
+
+int main ()
 {
-	int maxiter = 120, pert = 7;
-	int iter = 1, cnt = 0, i = 1;
-	for (iter = 1; iter <= maxiter; iter++)
+	int n, m, temp;
+	vector<int> phi, ptime;
+	printf ("Please input the number of job(s) : ");
+	cin >> n;
+	for (int i=0; i<n;i++)
 	{
-		for (i = 1; i<=n; i++)
-		{
-			
-		}
+		cin >> temp;
+		ptime.push_back(temp);
 	}
-}
-
-//iterated greedy local search
-int IGRLS (int n)
-{
-	
-}
-
-int main() {
-	int n;
-	scanf("%d", &n);
+	printf ("Please input the number of machine(s) : ");
+	scanf ("%d", &m);
+	cetakVector(iteratedGreedy(ptime, n));
+	printf("\n");
 	return 0;
 }

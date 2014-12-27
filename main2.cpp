@@ -1,8 +1,10 @@
 #include <cstdio>
 #include <utility>
 #include <cstdlib>
+#include <iostream>
 #include <ctime>
 #include <algorithm>
+#include <vector>
 using namespace std;
 
 //array start from 1 to n
@@ -40,10 +42,31 @@ void localsearchinsertion (int pi[], int n)
    }
   }
 }
+void copyVector(int pi[], int n, vector<int> &vectorA)
+{
+	vectorA.push_back(0);
+	for(int i=1; i<=n; i++){
+		vectorA.push_back(pi[i]);
+	}
+}
+
+void cetakVector(vector<int> vectorA, int n)
+{
+	for(int i=1; i<=n; i++){
+		cout << vectorA[i];
+	}
+	cout << endl;
+}
+
+void iteratedGreedy (int pi[], int n)
+{
+	
+}
 
 int main ()
 {
   int n, m;
+  vector<int> phi;
   printf ("Please input the number of job(s) : ");
   scanf ("%d", &n);
   int ptime[n+1];
@@ -51,6 +74,8 @@ int main ()
   {
   	scanf("%d", ptime[i]);
   }
+  copyVector(ptime, n, phi);
+  cetakVector(phi, n);
   printf ("Please input the number of machine(s) : ");
   scanf ("%d", &m);
   
