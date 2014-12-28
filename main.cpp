@@ -13,21 +13,35 @@ using namespace std;
 
 //---------------------------------------global variable-------------------------------------------------------
 int d=3;
+int m, n;
 unsigned int seed;
 typedef pair<int, int> node;
 vector< vector<node> > p;
 
 //-----------------------------------------Cmax ----------------------------------------------------------------
 
-int cmax (vector <node> arr)
+int cmax (vector <int> arr)
 {
 	//total completion time
-	int sum = 0;
-	for (int i=0; i<arr.size(); i++)
-	{
-		sum += arr[i].first;
+	int temp, selisih;
+	vector<int> machine;
+	for(int i=0; i<m; i++){
+		machine.push_back(0);
 	}
-	return sum;
+	for(int i=0; i<n; i++){
+		temp=arr[i];
+		machine[0]+=(p[0][temp]).first;
+		for(int j=1; j<m; j++){
+			if(machine[j-1]<=machine[j]){
+				machine[j]+=(p[j][temp]).first;
+			}
+			else{
+				selisih=machine[j-1]-machine[j];
+				machine[j]=machine[j]+selisih+(p[j][temp]).first;
+			}
+		}
+	}
+	return machine[m-1];
 }
 
 //--------------------------------------------------------------------------------------------------------------
@@ -102,7 +116,6 @@ vector<node> iteratedGreedy (vector<node> phi, int n)
 
 int main ()
 {
-	int n, m;
 	node temp;
 	vector<node> phi;
 	printf ("Please input the number of job(s) : ");
