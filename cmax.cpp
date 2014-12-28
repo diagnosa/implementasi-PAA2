@@ -16,6 +16,7 @@ int m, n;
 unsigned int seed;
 typedef pair<int, int> node;
 vector< vector<node> > p;
+vector<node> sumJob;
 
 //-----------------------------------------Cmax ----------------------------------------------------------------
 
@@ -42,6 +43,53 @@ int cmax (vector <int> arr)
 	}
 	return machine[m-1];
 }
+
+//--------------------------------------------------------------------------------------------------------------
+void copyVector(vector<int> asal, int n, vector<int> &tujuan)
+{
+	for(int i=0; i<n; i++){
+		tujuan.push_back(asal[i]);
+	}
+}
+
+void cetakVector(vector<int> vectorA)
+{
+	for(int i=0; i<vectorA.size(); i++){
+		cout << vectorA[i] << " ";
+	}
+	cout << endl;
+}
+//-----------------------------------------NEH_heuristic----------------------------------------------------------------
+bool rule (node a, node b) {
+	return (a > b);
+}
+
+vector<int> NEH_heuristic(vector<int> phi)
+{
+	vector<int> urutan;
+	int min, temp, indeksMinim;
+	sort (sumJob.begin(), sumJob.end(), rule);
+	temp = sumJob[0].second;
+	urutan.push_back(temp);
+	for(int i=1; i<n;i++)
+	{
+		temp = sumJob[i].second;
+		urutan.push_back(temp);
+		min=cmax(urutan);
+		urutan.pop_back();
+		indeksMinim=i;
+		for(int j=0; j<i; j++)
+		{
+			urutan.insert(urutan.begin()+j, temp);
+			if(min<cmax(urutan)){
+				indeksMinim=j;
+			}
+			urutan.erase(urutan.begin()+j);
+		}
+		urutan.insert(urutan.begin()+indeksMinim, temp);
+	}
+	return urutan;
+}
 int main()
 {
 	node temp;
@@ -64,10 +112,14 @@ int main()
 		}
 		p.push_back(phi);
 	}
+	int a;
 	vector<int> urutan;
 	for(int i=0;i<n;i++){
 		urutan.push_back(i);
 	}
-	cout << cmax(urutan);
+	vector<int> hasil;
+	copyVector(NEH_heuristic(urutan), n, hasil);
+	cout << cmax(hasil) << endl;
+	cetakVector(hasil);
 	return 0;
 }

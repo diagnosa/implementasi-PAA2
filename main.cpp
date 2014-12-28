@@ -11,12 +11,15 @@ using namespace std;
 //array start from 0 to n-1
 //test-case : mistic.heig-vd.ch/taillard/problemes.dir/ordonnancement.dir/flowshop.dir/tai50_20.txt
 
+
+
 //---------------------------------------global variable-------------------------------------------------------
 int d=3;
 int m, n;
 unsigned int seed;
 typedef pair<int, int> node;
 vector< vector<node> > p;
+vector<node> sumJob;
 
 //-----------------------------------------Cmax ----------------------------------------------------------------
 
@@ -45,28 +48,59 @@ int cmax (vector <int> arr)
 }
 
 //--------------------------------------------------------------------------------------------------------------
-void copyVector(vector<node> asal, int n, vector<node> &tujuan)
+void copyVector(vector<int> asal, int n, vector<int> &tujuan)
 {
 	for(int i=0; i<n; i++){
 		tujuan.push_back(asal[i]);
 	}
 }
 
-void cetakVector(vector<node> vectorA)
+void cetakVector(vector<int> vectorA)
 {
 	for(int i=0; i<vectorA.size(); i++){
-		cout << vectorA[i].second << " ";
+		cout << vectorA[i] << " ";
 	}
 	cout << endl;
 }
+//-----------------------------------------NEH_heuristic----------------------------------------------------------------
+bool rule (node a, node b) {
+	return (a > b);
+}
 
-vector<node> LocalSearch_Insertion(vector<node> phi, int n)
+vector<int> NEH_heuristic(vector<int> phi)
+{
+	vector<int> urutan;
+	int min, temp, indeksMinim;
+	sort (sumJob.begin(), sumJob.end(), rule);
+	temp = sumJob[0].second;
+	urutan.push_back(temp);
+	for(int i=1; i<n;i++)
+	{
+		temp = sumJob[i].second;
+		urutan.push_back(temp);
+		min=cmax(urutan);
+		urutan.pop_back();
+		indeksMinim=i;
+		for(int j=0; j<i; j++)
+		{
+			urutan.insert(urutan.begin()+j, temp);
+			if(min<cmax(urutan)){
+				indeksMinim=j;
+			}
+			urutan.erase(urutan.begin()+j);
+		}
+		urutan.insert(urutan.begin()+indeksMinim, temp);
+	}
+	return urutan;
+}
+//-----------------------------------------LocalSearchInsertion----------------------------------------------------------------
+vector<int> LocalSearch_Insertion(vector<int> phi, int n)
 {
 	srand(seed);
 	bool improve = 1;
 	int k;
-	node temp;
-	vector <node> phiA;
+	int temp;
+	vector <int> phiA;
 	while (improve == 1)
 	{
 		copyVector (phi, n, phiA);
@@ -87,15 +121,15 @@ vector<node> LocalSearch_Insertion(vector<node> phi, int n)
 	}
 	return phi;
 }
-
-vector<node> iteratedGreedy (vector<node> phi, int n)
+//-----------------------------------------IG----------------------------------------------------------------
+vector<int> iteratedGreedy (vector<int> phi, int n)
 {
 	srand(seed);
-	vector<node> phiB;
+	vector<int> phiB;
 	int k;
 	copyVector(phi, n, phiB);
 	while(1){
-		vector<node> phiD, phiR;
+		vector<int> phiD, phiR;
 		copyVector(phiB, n, phiD);
 		//destruction phase
 		for(int i=0; i<d; i++){
@@ -117,6 +151,7 @@ vector<node> iteratedGreedy (vector<node> phi, int n)
 int main ()
 {
 	node temp;
+	int sum;
 	vector<node> phi;
 	printf ("Please input the number of job(s) : ");
 	cin >> n;
@@ -131,15 +166,28 @@ int main ()
 	cin >> seed;
 	for (int i=0; i<m;i++)
 	{
+		sum = 0;
+		temp.second=i;
 		cout << "Please input processing time job for machine number : " << i+1 << endl;
 		for(int j=0; j<n ; j++)
 		{
 			cin >> (phi[j]).first;
+			sum+=(phi[j]).first;
+			
 		}
+		temp.second=sum;
+		sumJob.push_back(temp);
 		p.push_back(phi);
 	}
+	vector<int> urutan;
+	for(int i=0;i<n;i++){
+		urutan.push_back(i);
+	}
+	vector<int> hasil;
+	copyVector(iteratedGreedy(urutan, n), n, hasil);
+	cout << endl << "Cmax : " << cmax(hasil);
 	cout << endl << "Final Result :" << endl;
-	//cetakVector(iteratedGreedy(p[0], n));
+	cetakVector(hasil);
 	printf("\n");
 	return 0;
 }
