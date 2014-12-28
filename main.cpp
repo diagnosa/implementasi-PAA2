@@ -5,6 +5,7 @@
 #include <ctime>
 #include <algorithm>
 #include <vector>
+#include <cmath>
 
 using namespace std;
 
@@ -14,7 +15,8 @@ using namespace std;
 
 
 //---------------------------------------global variable-------------------------------------------------------
-int d=3;
+int d=4;
+float T = 0.4;
 int m, n;
 unsigned int seed;
 typedef pair<int, int> node;
@@ -47,6 +49,18 @@ int cmax (vector <int> arr)
 	return machine[m-1];
 }
 
+//-----------------------------------------Temperature----------------------------------
+
+float temperature (float T)
+{
+    int sum;
+    for (int i =0; i<m;i++)
+    {
+        sum+= sumJob[i].first;
+    }
+    return (T*(sum/(n*m*10)));
+}
+
 //--------------------------------------------------------------------------------------------------------------
 void copyVector(vector<int> asal, int n, vector<int> &tujuan)
 {
@@ -62,6 +76,8 @@ void cetakVector(vector<int> vectorA)
 	}
 	cout << endl;
 }
+
+
 //-----------------------------------------NEH_heuristic----------------------------------------------------------------
 bool rule (node a, node b) {
 	return (a > b);
@@ -124,25 +140,45 @@ vector<int> LocalSearch_Insertion(vector<int> phi, int n)
 //-----------------------------------------IG----------------------------------------------------------------
 vector<int> iteratedGreedy (vector<int> phi, int n)
 {
+    //phi := NEH_heuristic ; -> input
 	srand(seed);
 	vector<int> phiB;
 	int k;
+	float r = static_cast <float> (rand()) / static_cast <float> (RAND_MAX); //random number from 0-1
+	//phi := LocalSearch_Insertion ( phi );
+	phi = LocalSearch_Insertion(phi,n);
+	//phi b := phi;
 	copyVector(phi, n, phiB);
 	while(1){
-		vector<int> phiD, phiR;
-		copyVector(phiB, n, phiD);
-		//destruction phase
+		vector<int> phiD, phiR, phiL;
+		//phiD  := phi ;
+		copyVector(phi, n, phiD);   //destruction phase
+		//for i := 1 to d do
+            //phiD := remove one job at random from phiD and insert it in phiR ;
+        //endfor
 		for(int i=0; i<d; i++){
 			k=rand()%phiD.size();
 			phiR.push_back(phiD[k]);
 			phiD.erase(phiD.begin()+k);
 		 }
-		 //construction phase
-		 for(int i=0; i<d; i++){
+		 //for i := 1 to d do
+            //phiD := best permutation obtained by inserting job phiR ( i ) in all possible positions of phiD0 ;
+        //endfor
+		 for(int i=0; i<d; i++){    //construction phase
 		 	k=rand()%phiD.size();
 		 	phiD.insert(phiD.begin()+k, phiR[i]);
 		 }
-		 return phiD;
+		 phiL = LocalSearch_Insertion(phiD, n);
+		 if (cmax(phiL) < cmax(phi)) {
+            copyVector(phiL,n,phi);
+            if (cmax(phi) < cmax(phiB)) {
+                copyVector(phi, n, phiB);
+            }
+		 }
+		 else if (r <= exp(((-cmax(phiL))-cmax(phi)/*/temperature*/)) ) {
+            copyVector(phiL, n, phi);
+		 }
+		 return phiB;
 		if(1) break;
 	}
 }
@@ -173,7 +209,7 @@ int main ()
 		{
 			cin >> (phi[j]).first;
 			sum+=(phi[j]).first;
-			
+
 		}
 		temp.second=sum;
 		sumJob.push_back(temp);
