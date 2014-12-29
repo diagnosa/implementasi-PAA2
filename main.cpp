@@ -58,7 +58,11 @@ float temperature (float T)
     {
         sum+= sumJob[i].first;
     }
-    return (T*(sum/(n*m*10)));
+    return (T*(sum/(n*m*10.00)));
+}
+
+float criterion (){
+    return ((float)n * (m/2.00) * 60.00);
 }
 
 //--------------------------------------------------------------------------------------------------------------
@@ -140,15 +144,18 @@ vector<int> LocalSearch_Insertion(vector<int> phi, int n)
 //-----------------------------------------IG----------------------------------------------------------------
 vector<int> iteratedGreedy (vector<int> phi, int n)
 {
+    float total_time;
+    clock_t start, finish;
     //phi := NEH_heuristic ; -> input
 	srand(seed);
 	vector<int> phiB;
 	int k;
 	float r = static_cast <float> (rand()) / static_cast <float> (RAND_MAX); //random number from 0-1
 	//phi := LocalSearch_Insertion ( phi );
-	phi = LocalSearch_Insertion(phi,n);
+	copyVector(LocalSearch_Insertion(phi,n), n, phi);
 	//phi b := phi;
 	copyVector(phi, n, phiB);
+	start = clock();
 	while(1){
 		vector<int> phiD, phiR, phiL;
 		//phiD  := phi ;
@@ -168,7 +175,7 @@ vector<int> iteratedGreedy (vector<int> phi, int n)
 		 	k=rand()%phiD.size();
 		 	phiD.insert(phiD.begin()+k, phiR[i]);
 		 }
-		 phiL = LocalSearch_Insertion(phiD, n);
+		 copyVector(LocalSearch_Insertion(phiD, n), n, phiL);
 		 if (cmax(phiL) < cmax(phi)) {
             copyVector(phiL,n,phi);
             if (cmax(phi) < cmax(phiB)) {
@@ -179,7 +186,9 @@ vector<int> iteratedGreedy (vector<int> phi, int n)
             copyVector(phiL, n, phi);
 		 }
 		 return phiB;
-		if(1) break;
+		 finish = clock();
+		 total_time = ((float) (finish - start)) * 1000 / (CLOCKS_PER_SEC);//calulate total time
+		if(total_time > criterion()) break;
 	}
 }
 
