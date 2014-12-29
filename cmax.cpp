@@ -29,7 +29,7 @@ int cmax (vector <int> arr)
 	for(int i=0; i<m; i++){
 		machine.push_back(0);
 	}
-	for(int i=0; i<n; i++){
+	for(int i=0; i<arr.size(); i++){
 		temp=arr[i];
 		machine[0]+=(p[0][temp]).first;
 		for(int j=1; j<m; j++){
@@ -75,16 +75,14 @@ vector<int> NEH_heuristic(vector<int> phi)
 	for(int i=1; i<n;i++)
 	{
 		temp = sumJob[i].second;
-		cout << "wahaha" << endl;
-		cout << temp << endl;
 		urutan.push_back(temp);
 		min=cmax(urutan);
 		urutan.pop_back();
 		indeksMinim=i;
-		for(int j=i-1; j>=0; j--)
+		for(int j=urutan.size()-1; j>=0; j--)
 		{
 			urutan.insert(urutan.begin()+j, temp);
-			if(min<cmax(urutan)){
+			if(min>cmax(urutan)){
 				indeksMinim=j;
 			}
 			urutan.erase(urutan.begin()+j);
@@ -107,24 +105,31 @@ int main()
 	printf ("Please input the number of machine(s) : ");
 	cin >> m;
 	int sum;
-	vector<int> urutan;
+	vector<int> urutan, urutan2;
 	for(int i=0;i<n;i++){
 		urutan.push_back(i);
 	}
 	
 	for (int i=0; i<m;i++)
 	{
-		sum = 0;
-		temp.second=i;
 		cout << "Please input processing time job for machine number : " << i+1 << endl;
 		for(int j=0; j<n ; j++)
 		{
 			cin >> (phi[j]).first;
-			sum+=(phi[j]).first;
+		}
+		temp.first=sum;
+		p.push_back(phi);
+	}
+	for(int i=0; i<n; i++)
+	{
+		sum = 0;
+		temp.second=i;
+		for(int j=0; j<m ; j++)
+		{
+			sum+=p[j][i].first;
 		}
 		temp.first=sum;
 		sumJob.push_back(temp);
-		p.push_back(phi);
 	}
 	vector<int> hasil;
 	copyVector(NEH_heuristic(urutan), n, hasil);

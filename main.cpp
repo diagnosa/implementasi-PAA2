@@ -15,7 +15,7 @@ using namespace std;
 
 
 //---------------------------------------global variable-------------------------------------------------------
-int d=4;
+int d=3;
 float T = 0.4;
 int m, n;
 unsigned int seed;
@@ -33,7 +33,7 @@ int cmax (vector <int> arr)
 	for(int i=0; i<m; i++){
 		machine.push_back(0);
 	}
-	for(int i=0; i<n; i++){
+	for(int i=0; i<arr.size(); i++){
 		temp=arr[i];
 		machine[0]+=(p[0][temp]).first;
 		for(int j=1; j<m; j++){
@@ -48,6 +48,7 @@ int cmax (vector <int> arr)
 	}
 	return machine[m-1];
 }
+
 
 //-----------------------------------------Temperature----------------------------------
 
@@ -101,10 +102,10 @@ vector<int> NEH_heuristic(vector<int> phi)
 		min=cmax(urutan);
 		urutan.pop_back();
 		indeksMinim=i;
-		for(int j=0; j<i; j++)
+		for(int j=urutan.size()-1; j>=0; j--)
 		{
 			urutan.insert(urutan.begin()+j, temp);
-			if(min<cmax(urutan)){
+			if(min>cmax(urutan)){
 				indeksMinim=j;
 			}
 			urutan.erase(urutan.begin()+j);
@@ -123,6 +124,7 @@ vector<int> LocalSearch_Insertion(vector<int> phi, int n)
 	vector <int> phiA;
 	while (improve == 1)
 	{
+		printf ("localsearch - loop\n");
 		copyVector (phi, n, phiA);
 		improve = 0;
 		for (int i=0; i < n; i++)
@@ -144,6 +146,7 @@ vector<int> LocalSearch_Insertion(vector<int> phi, int n)
 //-----------------------------------------IG----------------------------------------------------------------
 vector<int> iteratedGreedy (vector<int> phi, int n)
 {
+	cout << "gendeng we" << endl;
     float total_time;
     clock_t start, finish;
     //phi := NEH_heuristic ; -> input
@@ -157,6 +160,7 @@ vector<int> iteratedGreedy (vector<int> phi, int n)
 	copyVector(phi, n, phiB);
 	start = clock();
 	while(1){
+		cout << "loooop" <<endl;
 		vector<int> phiD, phiR, phiL;
 		//phiD  := phi ;
 		copyVector(phi, n, phiD);   //destruction phase
@@ -175,6 +179,7 @@ vector<int> iteratedGreedy (vector<int> phi, int n)
 		 	k=rand()%phiD.size();
 		 	phiD.insert(phiD.begin()+k, phiR[i]);
 		 }
+		 /*
 		 copyVector(LocalSearch_Insertion(phiD, n), n, phiL);
 		 if (cmax(phiL) < cmax(phi)) {
             copyVector(phiL,n,phi);
@@ -182,13 +187,14 @@ vector<int> iteratedGreedy (vector<int> phi, int n)
                 copyVector(phi, n, phiB);
             }
 		 }
-		 else if (r <= exp(((-cmax(phiL))-cmax(phi)/*/temperature*/)) ) {
+		 else if (r <= exp((((-(float)cmax(phiL))-(float)cmax(phi)) / temperature(T))) ) {
             copyVector(phiL, n, phi);
 		 }
-		 return phiB;
+		 */
 		 finish = clock();
-		 total_time = ((float) (finish - start)) * 1000 / (CLOCKS_PER_SEC);//calulate total time
+		 total_time = ((float) (finish - start))  / (CLOCKS_PER_SEC * 1000);//calulate total time
 		if(total_time > criterion()) break;
+		return phiD;
 	}
 }
 
