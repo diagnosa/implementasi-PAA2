@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <vector>
 #include <cmath>
+#define CLOCKS_PER_MS (CLOCKS_PER_SEC / 1000)
 
 using namespace std;
 
@@ -17,7 +18,7 @@ using namespace std;
 //---------------------------------------global variable-------------------------------------------------------
 int d=3;
 float T = 0.4;
-int m, n;
+int m, n, wahaha;
 unsigned int seed;
 typedef pair<int, int> node;
 vector< vector<node> > p;
@@ -63,12 +64,13 @@ float temperature (float T)
 }
 
 float criterion (){
-    return ((float)n * (m/2.00) * 60.00);
+    return ((float)n * (m/2.00) * 120.00);
 }
 
 //--------------------------------------------------------------------------------------------------------------
 void copyVector(vector<int> asal, int n, vector<int> &tujuan)
 {
+	tujuan.clear();
 	for(int i=0; i<n; i++){
 		tujuan.push_back(asal[i]);
 	}
@@ -124,7 +126,6 @@ vector<int> LocalSearch_Insertion(vector<int> phi, int n)
 	vector <int> phiA;
 	while (improve == 1)
 	{
-		printf ("localsearch - loop\n");
 		copyVector (phi, n, phiA);
 		improve = 0;
 		for (int i=0; i < n; i++)
@@ -146,7 +147,6 @@ vector<int> LocalSearch_Insertion(vector<int> phi, int n)
 //-----------------------------------------IG----------------------------------------------------------------
 vector<int> iteratedGreedy (vector<int> phi, int n)
 {
-	cout << "gendeng we" << endl;
     float total_time;
     clock_t start, finish;
     //phi := NEH_heuristic ; -> input
@@ -160,7 +160,6 @@ vector<int> iteratedGreedy (vector<int> phi, int n)
 	copyVector(phi, n, phiB);
 	start = clock();
 	while(1){
-		cout << "loooop" <<endl;
 		vector<int> phiD, phiR, phiL;
 		//phiD  := phi ;
 		copyVector(phi, n, phiD);   //destruction phase
@@ -179,22 +178,26 @@ vector<int> iteratedGreedy (vector<int> phi, int n)
 		 	k=rand()%phiD.size();
 		 	phiD.insert(phiD.begin()+k, phiR[i]);
 		 }
-		 /*
 		 copyVector(LocalSearch_Insertion(phiD, n), n, phiL);
 		 if (cmax(phiL) < cmax(phi)) {
             copyVector(phiL,n,phi);
             if (cmax(phi) < cmax(phiB)) {
                 copyVector(phi, n, phiB);
             }
+            else{
+            	return phiB;
+            }
 		 }
 		 else if (r <= exp((((-(float)cmax(phiL))-(float)cmax(phi)) / temperature(T))) ) {
             copyVector(phiL, n, phi);
 		 }
-		 */
-		 finish = clock();
-		 total_time = ((float) (finish - start))  / (CLOCKS_PER_SEC * 1000);//calulate total time
-		if(total_time > criterion()) break;
-		return phiD;
+		finish = clock();
+		total_time = ((float) (finish - start))  / (CLOCKS_PER_MS);//calulate total time
+		if(total_time > criterion()) 
+		{
+			cout << "time out" <<endl ;
+			return phiB;
+		}
 	}
 }
 
