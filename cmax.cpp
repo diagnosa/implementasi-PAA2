@@ -76,11 +76,12 @@ vector<int> NEH_heuristic(vector<int> phi)
 	{
 		temp = sumJob[i].second;
 		cout << "wahaha" << endl;
+		cout << temp << endl;
 		urutan.push_back(temp);
 		min=cmax(urutan);
 		urutan.pop_back();
 		indeksMinim=i;
-		for(int j=0; j<i; j++)
+		for(int j=i-1; j>=0; j--)
 		{
 			urutan.insert(urutan.begin()+j, temp);
 			if(min<cmax(urutan)){
@@ -120,9 +121,8 @@ int main()
 		{
 			cin >> (phi[j]).first;
 			sum+=(phi[j]).first;
-			
 		}
-		temp.second=sum;
+		temp.first=sum;
 		sumJob.push_back(temp);
 		p.push_back(phi);
 	}
