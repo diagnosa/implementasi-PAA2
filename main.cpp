@@ -172,7 +172,7 @@ vector<int> iteratedGreedy (vector<int> phi, int n)
 			phiD.erase(phiD.begin()+k);
 		 }
 		 //for i := 1 to d do
-            //phiD := best permutation obtained by inserting job phiR ( i ) in all possible positions of phiD0 ;
+            //phiD := best permutation obtained by inserting job phiR ( i ) in all possible positions of phiD ;
         //endfor
 		 for(int i=0; i<d; i++){    //construction phase
 		 	k=rand()%phiD.size();
@@ -184,11 +184,8 @@ vector<int> iteratedGreedy (vector<int> phi, int n)
             if (cmax(phi) < cmax(phiB)) {
                 copyVector(phi, n, phiB);
             }
-            else{
-            	return phiB;
-            }
 		 }
-		 else if (r <= exp((((-(float)cmax(phiL))-(float)cmax(phi)) / temperature(T))) ) {
+		 else if (r <= exp((((-(float)cmax(phiL))-(float)cmax(phi)) / temperature(T))) ) { //checking temperature of machine
             copyVector(phiL, n, phi);
 		 }
 		finish = clock();
